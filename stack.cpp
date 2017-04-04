@@ -1,6 +1,12 @@
 #include <iostream>
 #include "stack.h"
 #include <cmath>
+#include <apstring.h>
+#include <apstring.cpp>
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 
 using namespace std;
 
@@ -84,5 +90,25 @@ float Operator::operate(char op) {
 				  } else cout << "Stack is empty!";
 				  break;
 	}
+	
+}
+
+Button::Button(int xpos, int ypos, int w, int h, int SIZE, ALLEGRO_COLOR c, apstring t) {
+	
+	x = xpos;
+	y = ypos;
+	width = w;
+	height = h;
+	colour = c;
+	text = t;
+	SQUARE_SIZE = SIZE;
+	font = al_load_font("font.ttf", 50, 0);
+	
+}
+
+void Button::draw() {
+	
+	al_draw_filled_rectangle(x * SQUARE_SIZE + 0.05 * SQUARE_SIZE, y * SQUARE_SIZE + 0.05 * SQUARE_SIZE, x * SQUARE_SIZE + (width - 1) * SQUARE_SIZE + 0.95 * SQUARE_SIZE, y * SQUARE_SIZE + (height - 1) * SQUARE_SIZE + 0.95 * SQUARE_SIZE, colour);
+	al_draw_text(font, al_map_rgb(0, 0, 0), x * SQUARE_SIZE + SQUARE_SIZE / 2 + (width - 1) * SQUARE_SIZE / 2, y * SQUARE_SIZE + 20 + (height - 1) * SQUARE_SIZE / 2, ALLEGRO_ALIGN_CENTRE, text.c_str());
 	
 }

@@ -1,6 +1,9 @@
 #ifndef STACK_H
 #define STACK_H
 #include <iostream>
+#include <apstring.h>
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
 
 class Stack {
 	
@@ -24,4 +27,17 @@ class Operator : public Stack {
 	
 };
 
+class Button {
+	
+	private:
+		int x, y, width, height, SQUARE_SIZE;
+		ALLEGRO_COLOR colour;
+		ALLEGRO_FONT *font;
+		apstring text;
+	public:
+		Button(int xpos, int ypos, int w, int h, int SIZE, ALLEGRO_COLOR c, apstring t);
+		void draw();
+		~Button() {};
+	
+};
 #endif
