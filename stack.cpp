@@ -55,7 +55,7 @@ float Operator::operate(char op) {
 				  } else cout << "Not enough data in stack to subtract!" << endl;
 				  break; 
 				  
-		case '*': if (top > 0) {
+		case 'X': if (top > 0) {
 				      push(pop() * pop());
 				  } else cout << "Not enough data in stack to multiply!" << endl;
 				  break;
@@ -89,6 +89,22 @@ float Operator::operate(char op) {
 				      push(pow(pop(), 0.5));
 				  } else cout << "Stack is empty!";
 				  break;
+		
+		case '1': if (!isEmpty()) {
+				      push(sinf(pop() * M_PI / 180));
+				  } else cout << "Stack is empty!";
+				  break;
+				  
+		case '2': if (!isEmpty()) {
+				      push(cosf(pop() * M_PI / 180));
+				  } else cout << "Stack is empty!";
+				  break;
+				  
+		case '3': if (!isEmpty()) {
+				      push(tanf(pop() * M_PI / 180));
+				  } else cout << "Stack is empty!";
+				  break;
+				  
 	}
 	
 }
@@ -101,6 +117,8 @@ void Operator::clear() {
 		stack[i] = 0;
 		
 	}
+	
+	top = -1;
 	
 }
 

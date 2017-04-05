@@ -28,7 +28,7 @@ int main() {
 	al_install_keyboard();
 	al_install_mouse();
 	
-	al_set_new_display_flags(ALLEGRO_WINDOWED | ALLEGRO_RESIZABLE);
+	al_set_new_display_flags(ALLEGRO_WINDOWED);
 	display = al_create_display(SQUARE_SIZE * 5, SQUARE_SIZE * 8);
 	
 	event_queue = al_create_event_queue();
@@ -70,13 +70,13 @@ int main() {
 	buttons[25] = new Button(4, 2, 1, 2, SQUARE_SIZE, SLATE_GRAY, "DEL"); //Backspace
 	
 	Operator calc;
-	float input = 0;
-	char num1[50];
-	char num2[50] = "autism";
-	bool decimal = false;
-	float dplace = 10.0;
+	float input;
+	apstring num1("");
+	char num2[50];
 	
 	while(true) {
+		
+		input = atof(num1.c_str());
 		
 		for(int i = 0; i <= 25; i++) {
 			
@@ -86,9 +86,7 @@ int main() {
 		
 		al_draw_filled_rectangle(0.05 * SQUARE_SIZE, 0.05 * SQUARE_SIZE, 4 * SQUARE_SIZE + 0.95 * SQUARE_SIZE, 0.95 * SQUARE_SIZE, WHITE);
 		al_draw_filled_rectangle(0.05 * SQUARE_SIZE, SQUARE_SIZE + 0.05 * SQUARE_SIZE, 4 * SQUARE_SIZE + 0.95 * SQUARE_SIZE, SQUARE_SIZE + 0.95 * SQUARE_SIZE, WHITE);
-		
-		sprintf(num1, "%f", input);
-		
+				
 		if(calc.getTop() < 0) {
 			
 			sprintf(num2, "%f", 0.0);
@@ -99,7 +97,7 @@ int main() {
 			
 		}
 		
-		al_draw_text(buttons[0]->getFont(), al_map_rgb(0, 0, 0), 4 * SQUARE_SIZE + 0.90 * SQUARE_SIZE, SQUARE_SIZE / 2 + 0.95 * SQUARE_SIZE, ALLEGRO_ALIGN_RIGHT, num1);
+		al_draw_text(buttons[0]->getFont(), al_map_rgb(0, 0, 0), 4 * SQUARE_SIZE + 0.90 * SQUARE_SIZE, SQUARE_SIZE / 2 + 0.95 * SQUARE_SIZE, ALLEGRO_ALIGN_RIGHT, num1.c_str());
 		al_draw_text(buttons[0]->getFont(), al_map_rgb(0, 0, 0), 4 * SQUARE_SIZE + 0.90 * SQUARE_SIZE, SQUARE_SIZE / 2, ALLEGRO_ALIGN_RIGHT, num2);
 					
 		al_flip_display();
@@ -122,41 +120,42 @@ int main() {
 		} else if(event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
 			
 			if(event.mouse.button == 1) {
-				
-				cout << "click" << endl;
-				
+								
 				for(int i = 0; i <= 25; i++) {
 					
 					if(event.mouse.x >= buttons[i]->getX() * SQUARE_SIZE && event.mouse.x <= buttons[i]->getX() * SQUARE_SIZE + buttons[i]->getW() * SQUARE_SIZE && event.mouse.y >= buttons[i]->getY() * SQUARE_SIZE && event.mouse.y <= buttons[i]->getY() * SQUARE_SIZE + buttons[i]->getH() * SQUARE_SIZE) {
 														
 						if(i >= 0 && i <= 9) {
 						
-							if(!decimal) {
-								
-								input *= 10;
-								input += float(i);
-								
-							} else {
-								
-								cout << "autism";
-								input += i / dplace;
-								dplace *= 10;
-								
-							}
+							num1 += buttons[i]->getText();
 								
 						} else if(i == 10) {
 							
-							input = -input;
+							if(num1[0] == '-') {
+								
+								for(int i = 0; i < num1.length() - 1; i++) {
+									
+									num1[i] = num1[i + 1];
+									
+								}
+								
+								num1[i] = '\0';
+								
+							} else {
+							
+								num1 = "-" + num1;
+							
+							}
 							
 						} else if(i == 11) {
 							
-							decimal = true;
+							num1 += ".";
 							
 						} else if(i >= 12 && i <= 15) {
 							
 							calc.push(input);
 							input = 0;
-							decimal = false;
+							num1 = "";
 							
 							calc.operate(buttons[i]->getText()[0]);
 							
@@ -164,56 +163,48 @@ int main() {
 							
 							calc.push(input);
 							input = 0;
-							decimal = false; 
+							num1 = ""; 
 							
 						} else if(i == 17) {
 							
 							calc.push(input);
 							input = 0;
-							decimal = false;
+							num1 = "";
 							calc.operate('r');
 							
 						} else if(i == 18) {
 							
 							calc.push(input);
 							input = 0;
-							decimal = false;
+							num1 = "";
 							calc.operate('s');
 							
 						} else if(i == 19) {
 							
 							input = 0;
-							decimal = false;
+							num1 = "";
 							
 						} else if(i == 20) {
 						
 							calc.clear();
 						
+						}else if(i >= 21 && i <= 23) {
+							
+							calc.push(input);
+							input = 0;
+							num1 = "";
+							calc.operate(i + 28);
+						
 						} else if(i == 24) {
 							
 							calc.push(input);
 							input = 0;
-							decimal = false;
+							num1 = "";
 							calc.operate('^');
 							
 						} else if(i == 25) {
 							
-							if(!decimal) {
-								
-								input = floor(input / 10);
-								
-							} else {
-								
-								dplace /= 10;
-								if(dplace <= 10) {
-									
-									decimal = false;
-									
-								}
-								
-								input = floor(input * dplace) / dplace;
-								
-							}
+							num1[num1.length() - 1] = '\0';
 							
 						}
 						
@@ -226,8 +217,6 @@ int main() {
 		}
 		
 	}
-	
-	calc.push(4);
 	
 	return 0;
 	
