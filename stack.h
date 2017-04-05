@@ -15,7 +15,8 @@ class Stack {
 		float pop(); //Get value on top of stack
 		void push(float n); //Put value at the top of the stack
 		bool isEmpty() { return top < 0; } //Check if stack is empty
-		int getTop() {return top; } //Find index of top of stack
+		int getTop() { return top; } //Find index of top of stack
+		float getTopData() { return stack[top]; }
 		~Stack() { std::cout << std::endl << "Stack Destroyed" << std::endl; } //Deconstructor
 	
 };
@@ -24,6 +25,7 @@ class Operator : public Stack {
 	
 	public:
 		float operate(char op); //Perform operation on stack
+		void clear(); //Clear stack
 	
 };
 
@@ -37,6 +39,12 @@ class Button {
 	public:
 		Button(int xpos, int ypos, int w, int h, int SIZE, ALLEGRO_COLOR c, apstring t);
 		void draw();
+		int getX() {return x;}
+		int getY() {return y;}
+		int getW() {return width;}
+		int getH() {return height;}
+		apstring getText() {return text;}
+		ALLEGRO_FONT *getFont() { return font; }
 		~Button() {};
 	
 };

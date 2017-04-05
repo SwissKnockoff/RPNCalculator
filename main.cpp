@@ -3,6 +3,7 @@
 #include <iostream>
 #include "stack.h"
 #include "stack.cpp"
+#include <cstdio>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
@@ -15,7 +16,6 @@ using namespace std;
 ALLEGRO_DISPLAY *display;
 ALLEGRO_EVENT_QUEUE *event_queue;
 
-static ALLEGRO_COLOR BLUE;
 static ALLEGRO_COLOR WHITE;
 static ALLEGRO_COLOR SLATE_GRAY;
 
@@ -26,6 +26,7 @@ int main() {
 	al_init_font_addon();
 	al_init_ttf_addon();
 	al_install_keyboard();
+	al_install_mouse();
 	
 	al_set_new_display_flags(ALLEGRO_WINDOWED | ALLEGRO_RESIZABLE);
 	display = al_create_display(SQUARE_SIZE * 5, SQUARE_SIZE * 8);
@@ -34,8 +35,8 @@ int main() {
 	
 	al_register_event_source(event_queue, al_get_display_event_source(display));
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
+	al_register_event_source(event_queue, al_get_mouse_event_source());
 	
-	BLUE = al_map_rgb(0, 255, 255);
 	WHITE = al_map_rgb(255, 255, 255);
 	SLATE_GRAY = al_map_rgb(112, 138, 144);
 	
@@ -65,26 +66,47 @@ int main() {
 	buttons[21] = new Button(0, 2, 1, 1, SQUARE_SIZE, SLATE_GRAY, "sin"); //Sine
 	buttons[22] = new Button(1, 2, 1, 1, SQUARE_SIZE, SLATE_GRAY, "cos"); //Cosine
 	buttons[23] = new Button(2, 2, 1, 1, SQUARE_SIZE, SLATE_GRAY, "tan"); //Tangent
-	buttons[24] = new Button(1, 3, 1, 1, SQUARE_SIZE, SLATE_GRAY, "y^x"); //Exponents
+	buttons[24] = new Button(1, 3, 1, 1, SQUARE_SIZE, SLATE_GRAY, "POW"); //Exponents
+	buttons[25] = new Button(4, 2, 1, 2, SQUARE_SIZE, SLATE_GRAY, "DEL"); //Backspace
 	
 	Operator calc;
+	float input = 0;
+	char num1[50];
+	char num2[50] = "autism";
+	bool decimal = false;
+	float dplace = 10.0;
 	
 	while(true) {
 		
-		for(int i = 0; i <= 24; i++) {
+		for(int i = 0; i <= 25; i++) {
 			
 			buttons[i]->draw();
 			
 		}
 		
-		al_draw_filled_rectangle(0.05 * SQUARE_SIZE, 0.05 * SQUARE_SIZE, 4 * SQUARE_SIZE + 0.05 * SQUARE_SIZE, 0.95 * SQUARE_SIZE, WHITE);
-		al_draw_filled_rectangle(0.05 * SQUARE_SIZE, SQUARE_SIZE + 0.05 * SQUARE_SIZE, 4 * SQUARE_SIZE + 0.05 * SQUARE_SIZE, SQUARE_SIZE + 0.95 * SQUARE_SIZE, WHITE);
+		al_draw_filled_rectangle(0.05 * SQUARE_SIZE, 0.05 * SQUARE_SIZE, 4 * SQUARE_SIZE + 0.95 * SQUARE_SIZE, 0.95 * SQUARE_SIZE, WHITE);
+		al_draw_filled_rectangle(0.05 * SQUARE_SIZE, SQUARE_SIZE + 0.05 * SQUARE_SIZE, 4 * SQUARE_SIZE + 0.95 * SQUARE_SIZE, SQUARE_SIZE + 0.95 * SQUARE_SIZE, WHITE);
+		
+		sprintf(num1, "%f", input);
+		
+		if(calc.getTop() < 0) {
+			
+			sprintf(num2, "%f", 0.0);
+			
+		} else {
+			
+			sprintf(num2, "%f", calc.getTopData());
+			
+		}
+		
+		al_draw_text(buttons[0]->getFont(), al_map_rgb(0, 0, 0), 4 * SQUARE_SIZE + 0.90 * SQUARE_SIZE, SQUARE_SIZE / 2 + 0.95 * SQUARE_SIZE, ALLEGRO_ALIGN_RIGHT, num1);
+		al_draw_text(buttons[0]->getFont(), al_map_rgb(0, 0, 0), 4 * SQUARE_SIZE + 0.90 * SQUARE_SIZE, SQUARE_SIZE / 2, ALLEGRO_ALIGN_RIGHT, num2);
 					
 		al_flip_display();
 		
 		ALLEGRO_EVENT event;
 		al_wait_for_event(event_queue, &event);
-				
+					
 		if(event.type == ALLEGRO_EVENT_KEY_DOWN) {
 			
 			if(event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
@@ -97,12 +119,115 @@ int main() {
 			
 			break;
 			
+		} else if(event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+			
+			if(event.mouse.button == 1) {
+				
+				cout << "click" << endl;
+				
+				for(int i = 0; i <= 25; i++) {
+					
+					if(event.mouse.x >= buttons[i]->getX() * SQUARE_SIZE && event.mouse.x <= buttons[i]->getX() * SQUARE_SIZE + buttons[i]->getW() * SQUARE_SIZE && event.mouse.y >= buttons[i]->getY() * SQUARE_SIZE && event.mouse.y <= buttons[i]->getY() * SQUARE_SIZE + buttons[i]->getH() * SQUARE_SIZE) {
+														
+						if(i >= 0 && i <= 9) {
+						
+							if(!decimal) {
+								
+								input *= 10;
+								input += float(i);
+								
+							} else {
+								
+								cout << "autism";
+								input += i / dplace;
+								dplace *= 10;
+								
+							}
+								
+						} else if(i == 10) {
+							
+							input = -input;
+							
+						} else if(i == 11) {
+							
+							decimal = true;
+							
+						} else if(i >= 12 && i <= 15) {
+							
+							calc.push(input);
+							input = 0;
+							decimal = false;
+							
+							calc.operate(buttons[i]->getText()[0]);
+							
+						} else if(i == 16) {
+							
+							calc.push(input);
+							input = 0;
+							decimal = false; 
+							
+						} else if(i == 17) {
+							
+							calc.push(input);
+							input = 0;
+							decimal = false;
+							calc.operate('r');
+							
+						} else if(i == 18) {
+							
+							calc.push(input);
+							input = 0;
+							decimal = false;
+							calc.operate('s');
+							
+						} else if(i == 19) {
+							
+							input = 0;
+							decimal = false;
+							
+						} else if(i == 20) {
+						
+							calc.clear();
+						
+						} else if(i == 24) {
+							
+							calc.push(input);
+							input = 0;
+							decimal = false;
+							calc.operate('^');
+							
+						} else if(i == 25) {
+							
+							if(!decimal) {
+								
+								input = floor(input / 10);
+								
+							} else {
+								
+								dplace /= 10;
+								if(dplace <= 10) {
+									
+									decimal = false;
+									
+								}
+								
+								input = floor(input * dplace) / dplace;
+								
+							}
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			
 		}
 		
 	}
 	
 	calc.push(4);
-	cout << calc.operate('s');
 	
 	return 0;
 	

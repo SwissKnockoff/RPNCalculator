@@ -45,18 +45,18 @@ float Operator::operate(char op) {
 	switch(op) {
 		
 		case '+': if (top > 0) {
-				      return pop() + pop();
+				      push(pop() + pop());
 				  } else cout << "Not enough data in stack to add!" << endl;
 				  break;
 				  
 		case '-': if (top > 0) {
 					  a = pop();
-				      return pop() - a;
+				      push(pop() - a);
 				  } else cout << "Not enough data in stack to subtract!" << endl;
 				  break; 
 				  
 		case '*': if (top > 0) {
-				      return pop() * pop();
+				      push(pop() * pop());
 				  } else cout << "Not enough data in stack to multiply!" << endl;
 				  break;
 				  
@@ -64,7 +64,7 @@ float Operator::operate(char op) {
 			  		  a = pop();
 					  if(a != 0) {
 					  
-					      return pop() / a;
+					      push(pop() / a);
 					  
 					  } else {
 					  	
@@ -76,19 +76,30 @@ float Operator::operate(char op) {
 				  break;
 				  
 		case '^': if (!isEmpty()) {
-				      return pow(pop(), pop());
+				      push(pow(pop(), pop()));
 				  } else cout << "Stack is empty!";
 				  break;
 				  
 		case 'r': if (!isEmpty()) {
-				      return 1 / pop();
+				      push(1 / pop());
 				  } else cout << "Stack is empty!";
 				  break;
 				  
 		case 's': if (!isEmpty()) {
-				      return pow(pop(), 0.5);
+				      push(pow(pop(), 0.5));
 				  } else cout << "Stack is empty!";
 				  break;
+	}
+	
+}
+
+//Reset stack to empty values
+void Operator::clear() {
+	
+	for(int i = 0; i < 20; i++) {
+		
+		stack[i] = 0;
+		
 	}
 	
 }
@@ -102,7 +113,7 @@ Button::Button(int xpos, int ypos, int w, int h, int SIZE, ALLEGRO_COLOR c, apst
 	colour = c;
 	text = t;
 	SQUARE_SIZE = SIZE;
-	font = al_load_font("font.ttf", 50, 0);
+	font = al_load_font("font.ttf", 36, 0);
 	
 }
 
