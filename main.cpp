@@ -231,7 +231,7 @@ int main() {
 							
 						} else if(i == 25) {
 							
-							break;
+							return 0;
 							
 						}
 						
