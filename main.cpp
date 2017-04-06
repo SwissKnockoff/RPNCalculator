@@ -1,4 +1,17 @@
-//TODO: BUTTON CLASS FOR BETTER EFFICIENCY
+/*****************************************************************************
+ *	Name: Justin Paoli                                                       *
+ *	Course: ICS4U                                                            *  
+ *	Date: April 6, 2017                                                      * 
+ *	                                                                         * 
+ *	Purpose: Reverse Polish Notation Calculator                              *
+ *	                                                                         *
+ *	Usage: Use like a normal calulator GUI - Enter a number then enter it    *
+ *  onto the top on the stack, then perform an operation on it               *
+ *	                                                                         *
+ *	Revision History: Made stack class, then added GUI, then added           *
+ *	functionality to the GUI                                                 *
+ *	                                                                         *  
+ *****************************************************************************/
 
 #include <iostream>
 #include "stack.h"
