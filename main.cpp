@@ -13,6 +13,7 @@
 
 using namespace std;
 
+//Declarations
 ALLEGRO_DISPLAY *display;
 ALLEGRO_EVENT_QUEUE *event_queue;
 
@@ -21,6 +22,7 @@ static ALLEGRO_COLOR SLATE_GRAY;
 
 int main() {
 	
+	//Allegro inits
 	al_init();
 	al_init_primitives_addon();
 	al_init_font_addon();
@@ -28,15 +30,17 @@ int main() {
 	al_install_keyboard();
 	al_install_mouse();
 	
+	//Create display and event queue
 	al_set_new_display_flags(ALLEGRO_WINDOWED);
 	display = al_create_display(SQUARE_SIZE * 5, SQUARE_SIZE * 8);
-	
 	event_queue = al_create_event_queue();
 	
+	//Register event sources
 	al_register_event_source(event_queue, al_get_display_event_source(display));
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 	
+	//Colour constants
 	WHITE = al_map_rgb(255, 255, 255);
 	SLATE_GRAY = al_map_rgb(112, 138, 144);
 	
@@ -76,6 +80,7 @@ int main() {
 	
 	while(true) {
 		
+		//Draw display
 		input = atof(num1.c_str());
 		
 		for(int i = 0; i <= 25; i++) {
@@ -102,9 +107,11 @@ int main() {
 					
 		al_flip_display();
 		
+		//Wait for an event
 		ALLEGRO_EVENT event;
 		al_wait_for_event(event_queue, &event);
-					
+			
+		//If its the ESC key exit		
 		if(event.type == ALLEGRO_EVENT_KEY_DOWN) {
 			
 			if(event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
@@ -112,19 +119,23 @@ int main() {
 				break;
 				
 			}
-			
+		
+		//If its the red X button exit
 		} else if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			
 			break;
-			
+		
+		//If they left click somewhere	
 		} else if(event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
 			
 			if(event.mouse.button == 1) {
-								
+					
+				//Find which button it is then do the action for that button				
 				for(int i = 0; i <= 25; i++) {
 					
 					if(event.mouse.x >= buttons[i]->getX() * SQUARE_SIZE && event.mouse.x <= buttons[i]->getX() * SQUARE_SIZE + buttons[i]->getW() * SQUARE_SIZE && event.mouse.y >= buttons[i]->getY() * SQUARE_SIZE && event.mouse.y <= buttons[i]->getY() * SQUARE_SIZE + buttons[i]->getH() * SQUARE_SIZE) {
-														
+						
+						//								
 						if(i >= 0 && i <= 9) {
 						
 							num1 += buttons[i]->getText();
@@ -133,7 +144,9 @@ int main() {
 							
 							if(num1[0] == '-') {
 								
-								for(int i = 0; i < num1.length() - 1; i++) {
+								int i;
+								
+								for(i = 0; i < num1.length() - 1; i++) {
 									
 									num1[i] = num1[i + 1];
 									
