@@ -71,7 +71,7 @@ int main() {
 	buttons[22] = new Button(1, 2, 1, 1, SQUARE_SIZE, SLATE_GRAY, "cos"); //Cosine
 	buttons[23] = new Button(2, 2, 1, 1, SQUARE_SIZE, SLATE_GRAY, "tan"); //Tangent
 	buttons[24] = new Button(1, 3, 1, 1, SQUARE_SIZE, SLATE_GRAY, "POW"); //Exponents
-	buttons[25] = new Button(4, 2, 1, 2, SQUARE_SIZE, SLATE_GRAY, "DEL"); //Backspace
+	buttons[25] = new Button(4, 2, 1, 2, SQUARE_SIZE, SLATE_GRAY, "EXIT"); //exit
 	
 	Operator calc;
 	float input;
@@ -134,8 +134,7 @@ int main() {
 				for(int i = 0; i <= 25; i++) {
 					
 					if(event.mouse.x >= buttons[i]->getX() * SQUARE_SIZE && event.mouse.x <= buttons[i]->getX() * SQUARE_SIZE + buttons[i]->getW() * SQUARE_SIZE && event.mouse.y >= buttons[i]->getY() * SQUARE_SIZE && event.mouse.y <= buttons[i]->getY() * SQUARE_SIZE + buttons[i]->getH() * SQUARE_SIZE) {
-						
-						//								
+													
 						if(i >= 0 && i <= 9) {
 						
 							num1 += buttons[i]->getText();
@@ -217,7 +216,7 @@ int main() {
 							
 						} else if(i == 25) {
 							
-							num1[num1.length() - 1] = '\0';
+							break;
 							
 						}
 						
