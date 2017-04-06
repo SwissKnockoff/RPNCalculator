@@ -198,6 +198,8 @@ int main() {
 							
 						} else if(i == 20) {
 						
+							input = 0;
+							num1 = "";
 							calc.clear();
 						
 						}else if(i >= 21 && i <= 23) {
